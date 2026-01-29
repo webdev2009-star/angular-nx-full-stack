@@ -133,82 +133,104 @@ The NX monorepo structure provides:
 - **Jest** - Testing framework
 - **ESLint** - Code linting
 
-## 🚀 Setup Instructions
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
 - npm or yarn
 
-### Installation
+### Installation & Setup
 
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd TurboVets
-```
-
-2. **Install dependencies**
+1. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Configure environment variables**
+2. **Configure environment (Optional)**
 
-Create a `.env` file in the root directory (or use the API's default values):
+The application works with default settings. To customize, create a `.env` file:
 
 ```env
-# API Configuration
 PORT=3000
 JWT_SECRET=your-super-secret-jwt-key-min-32-characters
-DATABASE_TYPE=sqlite
-DATABASE_NAME=database.sqlite
 ```
 
 > **Important**: Change the JWT_SECRET in production to a secure, randomly generated string of at least 32 characters.
 
-4. **Start the backend API**
+3. **Start the backend API**
 ```bash
 npm run start:api
 ```
 
-The API will start on `http://localhost:3000`
+Wait for: `🚀 API is running on: http://localhost:3000`
 
-5. **Start the frontend dashboard** (in a new terminal)
+4. **Start the frontend dashboard** (in a new terminal)
 ```bash
 npm run start:dashboard
 ```
 
-The dashboard will start on `http://localhost:4200`
+Wait for: `Angular Live Development Server is listening on localhost:4200`
 
-6. **Access the application**
+5. **Open your browser**
 
-Open your browser and navigate to `http://localhost:4200`
+Navigate to: `http://localhost:4200`
 
 ### First Time Setup
 
-1. **Register a new account** at `/auth/register`
-   - This will create your user account and organization
-   - The first user is automatically assigned the OWNER role
+1. **Register a new account** - Click "Sign up" or go to `/auth/register`
+   - Email: `admin@example.com`
+   - Username: `admin`
+   - Password: `password123` (minimum 6 characters)
+   - Organization Name: `My Company` (optional)
+   - The first user is automatically assigned the **OWNER** role
 
-2. **Start managing tasks!**
-   - Create, edit, and delete tasks
-   - Drag and drop tasks between columns
-   - View audit logs (Owner/Admin only)
+2. **Start using the app!**
+   - **Create Tasks**: Click the "New Task" button
+   - **Drag & Drop**: Drag tasks between columns (To Do, In Progress, Done)
+   - **Filter Tasks**: Use the filter bar to search and filter
+   - **View Stats**: See your completion rate at the top
+   - **Dark Mode**: Toggle with the moon/sun icon
+   - **Audit Logs**: Click "Audit Log" to see all actions (Owner/Admin only)
+
+### Troubleshooting
+
+**Port Already in Use:**
+```bash
+# Backend (use port 3001 instead)
+PORT=3001 npm run start:api
+
+# Frontend (use port 4201 instead)
+npm run start:dashboard -- --port 4201
+```
+
+**Database Issues:**
+```bash
+rm database.sqlite
+npm run start:api
+```
+
+**Dependencies Not Installing:**
+```bash
+npm clean-install
+# or
+rm -rf node_modules package-lock.json
+npm install
+```
 
 ### Running Tests
 
 ```bash
-# Run all tests
+# All tests
 npm test
 
-# Run backend tests only
+# Backend only
 npm run test:api
 
-# Run frontend tests only
+# Frontend only
 npm run test:dashboard
 
-# Run tests with coverage
+# With coverage
 npm test -- --coverage
 ```
 
@@ -223,7 +245,21 @@ npm run build:dashboard
 
 # Build all
 nx run-many --target=build --all
+
+# Output:
+# - Backend: dist/apps/api
+# - Frontend: dist/apps/dashboard
 ```
+
+### Testing Different Roles
+
+To test with different user roles:
+
+1. Register multiple users
+2. Use a SQLite viewer to modify roles:
+   - [DB Browser for SQLite](https://sqlitebrowser.org/)
+   - Or VS Code extension: "SQLite"
+3. Open `database.sqlite` and update the `role` field in the `users` table
 
 ## 📊 Data Model
 
