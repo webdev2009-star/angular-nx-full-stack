@@ -1,0 +1,126 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- TODO Column -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ getStatusLabel(TaskStatus.TODO) }}
+        </h3>
+        <span [class]="getStatusColor(TaskStatus.TODO) + ' px-3 py-1 rounded-full text-sm font-medium'">
+          {{ taskState.tasksByStatus().TODO.length }}
+        </span>
+      </div>
+    </div>
+    
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="taskState.tasksByStatus().TODO"
+      [cdkDropListConnectedTo]="[inProgressList, doneList]"
+      (cdkDropListDropped)="drop($event, TaskStatus.TODO)"
+      class="p-4 min-h-[400px] space-y-3"
+    >
+      <app-task-card
+        *ngFor="let task of taskState.tasksByStatus().TODO"
+        [task]="task"
+        [canEdit]="canEditTask()"
+        [canDelete]="canDeleteTask()"
+        (edit)="onEditTask(task)"
+        (delete)="onDeleteTask(task)"
+        cdkDrag
+        [cdkDragData]="task"
+      ></app-task-card>
+
+      <div *ngIf="taskState.tasksByStatus().TODO.length === 0" 
+           class="text-center py-8 text-gray-500 dark:text-gray-400">
+        <p>No tasks to do</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IN_PROGRESS Column -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ getStatusLabel(TaskStatus.IN_PROGRESS) }}
+        </h3>
+        <span [class]="getStatusColor(TaskStatus.IN_PROGRESS) + ' px-3 py-1 rounded-full text-sm font-medium'">
+          {{ taskState.tasksByStatus().IN_PROGRESS.length }}
+        </span>
+      </div>
+    </div>
+    
+    <div
+      cdkDropList
+      #inProgressList="cdkDropList"
+      [cdkDropListData]="taskState.tasksByStatus().IN_PROGRESS"
+      [cdkDropListConnectedTo]="[todoList, doneList]"
+      (cdkDropListDropped)="drop($event, TaskStatus.IN_PROGRESS)"
+      class="p-4 min-h-[400px] space-y-3"
+    >
+      <app-task-card
+        *ngFor="let task of taskState.tasksByStatus().IN_PROGRESS"
+        [task]="task"
+        [canEdit]="canEditTask()"
+        [canDelete]="canDeleteTask()"
+        (edit)="onEditTask(task)"
+        (delete)="onDeleteTask(task)"
+        cdkDrag
+        [cdkDragData]="task"
+      ></app-task-card>
+
+      <div *ngIf="taskState.tasksByStatus().IN_PROGRESS.length === 0" 
+           class="text-center py-8 text-gray-500 dark:text-gray-400">
+        <p>No tasks in progress</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONE Column -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ getStatusLabel(TaskStatus.DONE) }}
+        </h3>
+        <span [class]="getStatusColor(TaskStatus.DONE) + ' px-3 py-1 rounded-full text-sm font-medium'">
+          {{ taskState.tasksByStatus().DONE.length }}
+        </span>
+      </div>
+    </div>
+    
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="taskState.tasksByStatus().DONE"
+      [cdkDropListConnectedTo]="[todoList, inProgressList]"
+      (cdkDropListDropped)="drop($event, TaskStatus.DONE)"
+      class="p-4 min-h-[400px] space-y-3"
+    >
+      <app-task-card
+        *ngFor="let task of taskState.tasksByStatus().DONE"
+        [task]="task"
+        [canEdit]="canEditTask()"
+        [canDelete]="canDeleteTask()"
+        (edit)="onEditTask(task)"
+        (delete)="onDeleteTask(task)"
+        cdkDrag
+        [cdkDragData]="task"
+      ></app-task-card>
+
+      <div *ngIf="taskState.tasksByStatus().DONE.length === 0" 
+           class="text-center py-8 text-gray-500 dark:text-gray-400">
+        <p>No completed tasks</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<app-edit-task-modal
+  *ngIf="editingTask()"
+  [task]="editingTask()!"
+  (close)="editingTask.set(null)"
+  (taskUpdated)="onTaskUpdated()"
+></app-edit-task-modal>
